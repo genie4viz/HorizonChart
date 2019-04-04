@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Paper from '@material-ui/core/Paper';
 import HorizonGraph from './components/HorizonGraph';
 import './App.css';
 
@@ -48,10 +47,10 @@ const data = [{
 const params = {
   "value": data,
   "categories": {
-    "cat1" :"red",
-    "cat2" :"green",
-    "cat3" :"yellow",
-    "cat4" :"blue"
+    "cat1" :"#609127",
+    "cat2" :"#f6ce08",
+    "cat3" :"#f68408",
+    "cat4" :"#dc0000"
   },
   "dividerStyle":{
     "borderStyle": "solid",
@@ -66,10 +65,8 @@ const params = {
 class App extends Component {
   render() {
     return ( 
-        <div className = "App" >
-          <Paper style={{width: '50%',height: '50%',margin: 50}}>
-            <HorizonGraph params={params} />
-          </Paper>
+        <div className = "App" >          
+          <HorizonGraph params={params} />          
         </div>
     );
   }

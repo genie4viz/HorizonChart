@@ -40,23 +40,41 @@ class Horizon extends Component {
         const { width, data} = this.state;
         let gd = this.matching(data),
             total = d3.entries(d3.entries(data.value)[0].value)[0].value,
-            step = width / total,
-            g_y = 15;
+            step = width / total, sz = 15,
+            legend = d3.keys(data.value)[0];
             
-        d3.select(this.el).selectAll("*").remove();
+        d3.select(this.el).selectAll("*").remove();        
+        let graph = d3.select(this.el);
+
+        graph.selectAll(".bars")
+            .data(gd)
+            .enter().append('path')
+            .attr('class', d => legend + d.label)
+            .attr("d", (d, i) => {
+                let mov = 0, strPath = '';
+                for(let p = 0; p < i; p++){
+                    mov += step * gd[p].value;
+                }                
+                if(i == 0){
+                    strPath += 'M' + sz/2 + ',0Q0,' + sz/2 + ',' + sz/2 + ',' + sz + 'l' + (step * d.value - sz/2) + ',0l0,' + (-sz) + 'l-' + (step * d.value - sz/2) + ',0z';
+                }else if(i == gd.length - 1){
+                    strPath += 'M' + mov + ',0l0,' + sz + 'l' + (step * d.value - sz/2) + ',0Q' + (mov + step * d.value) + ',' + sz/2 + ',' + (mov + step *d.value - sz/2) + ',0l-' + (step * d.value - sz/2) + ',0z';
+                }else{
+                    strPath += 'M' + mov + ',0l0,' + sz + 'l' + step * d.value + ',0l0,' + (-sz) + 'l-' + step * d.value + ',0z';
+                }                    
+                return strPath;
+            })                
+            .attr("fill", d => d.color)
+            .attr("cursor", "pointer")
+            .on("mouseover", (d) => {
+                d3.select('.' + legend + d.label)                                        
+                    .attr('transform', 'translate(0, -3)scale(1, 1.2)');
+            })
+            .on("mouseout", (d) =>{
+                d3.select('.' + legend + d.label)                    
+                    .attr('transform', 'translate(0, 0)scale(1, 1)')
+            })
         
-        for(let i = 0; i < gd.length; i++){
-            d3.select(this.el)
-                .append('path')
-                .attr("d", () => {
-                    let mov = 0;
-                    for(let p = 0; p < i; p++){
-                        mov += step * gd[p].value;
-                    }
-                    return 'M' + mov + ',0l0,' + g_y + 'l' + step * gd[i].value + ',0l0,' + (-g_y) + 'l-' + step * gd[i].value + ',0z';
-                })                
-                .attr("fill", gd[i].color);
-        }        
     }
     render() {
         const {height, data} = this.state;
