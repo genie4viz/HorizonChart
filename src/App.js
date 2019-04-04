@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GaugeGraph from './components/GaugeGraph';
+import HorizonGraph from './components/HorizonGraph';
 import './App.css';
 
 const params = [
@@ -27,7 +27,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <GaugeGraph params={params[0]}/>        
+        <HorizonGraph params={params[0]}/>        
       </div>
     );
   }

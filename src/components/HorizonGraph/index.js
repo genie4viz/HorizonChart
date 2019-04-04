@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import ResponsiveWrapper from './ResponsiveWrapper';
-import Gauge from './Gauge';
+import Horizon from './Horizon';
 
 
-class GaugeGraph extends Component {
+class HorizonGraph extends Component {
   constructor(props){
     super(props);    
     const {parentWidth, parentHeight, params} = this.props;    
@@ -25,10 +25,10 @@ class GaugeGraph extends Component {
   render() {
     return (
       <Fragment>
-        <Gauge params={this.state.params} width={this.state.width} height={this.state.height} />
+        <Horizon params={this.state.params} width={this.state.width} height={this.state.height} />
       </Fragment>
     );
   }
 }
 
-export default ResponsiveWrapper(GaugeGraph);
+export default ResponsiveWrapper(HorizonGraph);

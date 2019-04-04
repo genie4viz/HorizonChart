@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
 
-class Gauge extends Component {
+class Horizon extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -114,10 +114,10 @@ class Gauge extends Component {
         const {width, height} = this.state;
         
         return  <svg width={width} height={height}>
-                    <g width={width} className="gaugeChart" transform={`translate(${width / 2}, ${height / 2})`} ref={el => this.el = el}></g>            
+                    <g width={width} className="HorizonChart" transform={`translate(${width / 2}, ${height / 2})`} ref={el => this.el = el}></g>            
                 </svg>
     }
 }
 
 
-export default Gauge;
+export default Horizon;
