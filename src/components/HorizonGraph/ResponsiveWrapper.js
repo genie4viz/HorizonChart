@@ -33,7 +33,7 @@ export default ChartComponent =>
         this.setState(() => ({
           containerWidth: currentContainerWidth,
           containerHeight: currentContainerHeight
-        }));
+        }));        
       }
     }
     renderChart() {
@@ -49,7 +49,7 @@ export default ChartComponent =>
 
       return (
         <div
-          style={{ width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%', minHeight: '250px'}}
           ref={el => {
             this.chartContainer = el;
           }}

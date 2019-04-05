@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
 import ResponsiveWrapper from './ResponsiveWrapper';
+import * as d3 from "d3";
 import Horizon from './Horizon';
 
 class HorizonGraph extends Component {
@@ -9,15 +10,15 @@ class HorizonGraph extends Component {
     this.state = {
       params: params,
       width: Math.max(parentWidth, 400),
-      height: Math.max(parentHeight, 200)
+      height: Math.max(parentHeight, 400)
     };
   };  
   componentWillReceiveProps(nextProps){    
-    const {parentWidth, parentHeight, params} = nextProps;
+    const {parentWidth, parentHeight, params} = nextProps;    
     this.setState({
       params: params,
       width: Math.max(parentWidth, 400),
-      height: Math.max(parentHeight, 200)
+      height: Math.max(parentHeight, 400)
     }); 
   }
   
@@ -27,15 +28,7 @@ class HorizonGraph extends Component {
         svgDimen = {width: width - margins.left - margins.right, height: height - margins.top - margins.bottom},
         categoryCount = params.value.length + 1,
         h_step = svgDimen.height / categoryCount,
-        datas = [], categories = [];
-    
-    JSON.parse(JSON.stringify(params.categories), (key, value) => {      
-      categories.push({
-        label: key,
-        value: value
-      });
-    });
-    categories.pop();//pop end empty node
+        datas = [];
 
     params.value.forEach((e) => {
       datas.push({
@@ -53,10 +46,10 @@ class HorizonGraph extends Component {
           </g>
         ))}
         <g className="legend" transform={`translate(0, ${h_step * (categoryCount - 1) + h_step/2})`}>
-          {categories.map((v, i) => (
+          {d3.entries(params.categories).map((v, i) => (
             <g key={i}>
-              <circle cx={svgDimen.width * (i + 1) / (categories.length + 2)} cy="0" r="5" fill={v.value} />            
-              <text x={svgDimen.width * (i + 1) / (categories.length + 2) + 10} y="0" alignmentBaseline="central" textAnchor="start">{v.label}</text>
+              <circle cx={svgDimen.width * (i + 1) / (d3.entries(params.categories).length + 2)} cy="0" r="5" fill={v.value} />            
+              <text x={svgDimen.width * (i + 1) / (d3.entries(params.categories).length + 2) + 10} y="0" alignmentBaseline="central" textAnchor="start">{v.key}</text>
             </g>
           ))}
         </g>

@@ -12,9 +12,9 @@ const data = [{
   }
 }, {  
   "Acme2": {
-    "total": 2500,
-    "cat1": 400,
-    "cat2": 100,
+    "total": 3500,
+    "cat1": 600,
+    "cat2": 900,
     "cat3": 500,
     "cat4": 1500
   }
@@ -57,8 +57,8 @@ const params = {
     "borderWidth": 1
   },
   "tooltipStyle":{
-    "width": 50,
-    "height": 30,
+    "width": 80,
+    "height": 50,
     "textMargin": 10
   }
 };
@@ -66,7 +66,7 @@ class App extends Component {
   render() {
     return ( 
         <div className = "App" >          
-          <HorizonGraph params={params} />          
+          <HorizonGraph params={params} />
         </div>
     );
   }
