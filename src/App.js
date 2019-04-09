@@ -52,14 +52,31 @@ const params = {
     "cat3" :"#f68408",
     "cat4" :"#dc0000"
   },
+  "textStyle":{
+    "fontSize": 20,
+    "fontFamily": "Georgia, serif",
+    "fontColor": "blue"
+  },
+  "margins": {
+    "left": 50,
+    "right": 0,
+    "top": 0,
+    "bottom": 70
+  },
   "dividerStyle":{
     "borderStyle": "solid",
+    "margin":0,
     "borderWidth": 1
   },
-  "tooltipStyle":{
-    "width": 80,
-    "height": 50,
-    "textMargin": 10
+  "tooltipStyle":{    
+    "textMargin": 5,
+    "background": "grey"
+  },
+  "legendStyle": {
+    "fontSize": 20,
+    "fontFamily": "Georgia, serif",
+    "textColor": 'blue',
+    "radius": 8
   }
 };
 class App extends Component {
