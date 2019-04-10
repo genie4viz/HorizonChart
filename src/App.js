@@ -65,10 +65,12 @@ const params = {
   },
   "dividerStyle":{
     "borderStyle": "solid",
-    "margin":0,
+    "margin":20,
     "borderWidth": 1
   },
-  "tooltipStyle":{    
+  "tooltipStyle":{
+    "width": 80,
+    "height": 40,
     "textMargin": 5,
     "background": "grey"
   },
@@ -82,8 +84,8 @@ const params = {
 class App extends Component {
   render() {
     return ( 
-        <div className = "App" >          
-          <HorizonGraph params={params} />
+        <div className = "App" style={{marginLeft:200}}>
+          <HorizonGraph params={params} />          
         </div>
     );
   }

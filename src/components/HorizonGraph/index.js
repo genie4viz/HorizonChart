@@ -45,7 +45,7 @@ class HorizonGraph extends Component {
         <g width={width} transform={`translate(${(params.margins.left)}, ${(height - svgDimen.height) / 2})`}>
           {datas.map((v, i) => (
             <g className={"Horizon" + i} key={i} transform={`translate(0, ${h_step * i})`}>
-              <Horizon data={v} width={svgDimen.width} height={h_step} height_pos={h_step * (i)}/>
+              <Horizon data={v} width={svgDimen.width} height={h_step} />
             </g>
           ))}
           <g className="legend" transform={`translate(0, ${h_step * (categoryCount - 1) + h_step/2})`}>

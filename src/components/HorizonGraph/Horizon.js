@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
-import './Horizon.css';
 
 class Horizon extends Component {
     constructor(props) {
@@ -41,7 +40,7 @@ class Horizon extends Component {
         this.drawChart();
     }
     drawChart() {
-        const { width, height, data, height_pos} = this.state;
+        const { width, height, data} = this.state;
         
         let gd = this.matching(data),
             dividerStyle = data.dividerStyle,
@@ -52,12 +51,30 @@ class Horizon extends Component {
             legend = d3.keys(data.value)[0];
         
         d3.select(this.el).selectAll("*").remove();        
-        let graph = d3.select(this.el);            
+        let graph = d3.select(this.el);
 
-        var div = d3.select("body").append("div")
-            .attr("class", "arrow_box")
-            .style("visibility", 'hidden');            
+        const tooltip = graph.append('g');
+
+        var defs = graph.append("defs");
+        var filter = defs.append("filter")
+            .attr("id", "drop-shadow")
+            .attr("height", "125%");
+        filter.append("feGaussianBlur")
+            .attr("in", "SourceAlpha")
+            .attr("stdDeviation", 1.3)
+            .attr("result", "blur");
         
+        filter.append("feOffset")
+            .attr("in", "blur")
+            .attr("dx", 2.1)
+            .attr("dy", 2.1)
+            .attr("result", "offsetBlur");
+        var feMerge = filter.append("feMerge");
+        feMerge.append("feMergeNode")
+            .attr("in", "offsetBlur")
+        feMerge.append("feMergeNode")
+            .attr("in", "SourceGraphic");
+
         graph
             .append('path')
             .attr("stroke-width", dividerStyle.borderWidth)
@@ -92,27 +109,61 @@ class Horizon extends Component {
                 d3.select('.' + legend + d.label)
                     .attr('transform', 'translate(0, -3)scale(1, 1.2)');
 
-                div.style("visibility", 'visible');
-                   
-                let divStr =    "<table style='margin-left:" + tooltipStyle.textMargin + "px;margin-right:" + tooltipStyle.textMargin + "px;'>" +
-                                "<tr>" +
-                                    "<td style='text-align:center;color:" + d.color + "'>●</td>" + 
-                                    "<td>" + d.label + "</td>" +
-                                "</tr>" +
-                                "<tr>" +
-                                    "<td>" + d.value + "</td>" + 
-                                    "<td>(" + Math.ceil(100 * d.value/ total) + "%)</td>" +
-                                "</tr>" +
-                                "</table>";                
-                div.html(divStr)	
-                    .style("left", mov + (step * d.value)/2 + "px")
-                    .style("top", (height_pos + height * 0.45) + "px");                
+                tooltip.attr('transform', `translate(${mov + (step * d.value)/2},0)`).call(callout, d);
+                tooltip.raise();
             })
             .on("mouseout", (d) =>{
                 d3.select('.' + legend + d.label)                    
                     .attr('transform', 'translate(0, 0)scale(1, 1)');
-                div.style("visibility", 'hidden');                   
+                tooltip.call(callout, null);
             });
+        function callout(g, d) {
+            if (!d){
+                g.selectAll("*").remove();
+                return g.style('display', 'none');                
+            } 
+
+            const w = tooltipStyle.width, h = tooltipStyle.height;
+            g.style('display', null)
+                .style('pointer-events', 'none')
+                .style('font', '10px sans-serif');
+            
+            g.append('path')
+                .attr("d", 'M0,0l-8,-12l' + (-(w/2 - 8)) + ',0l0,' + (-h) + 'l' + w + ',0l0,' + (h) + 'l' + (-(w/2 - 8)) + ',0L0,0Z')
+                .attr('fill', data.tooltipStyle.background)
+                .attr('stroke', 'grey')
+                .style("filter", "url(#drop-shadow)");
+
+            g.append('path')
+                .attr("d", 'M' + (-w/4 - 5) + ',' + (-h*3/4 - 12) + 'l10,0')
+                .attr("stroke-width", 12)
+                .attr("stroke-linecap","round")
+                .attr("stroke", d.color);
+
+            g.append('text')
+                .attr('x', w/4)
+                .attr('y', (-h*3/4 - 12))
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'central')
+                .style('font-size', 14)
+                .text(d.label);
+            g.append('text')
+                .attr('x', -w/4)
+                .attr('y', -(h/4 + 12))
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'central')
+                .style('font-weight', 'bold')
+                .style('font-size', 13)
+                .text(d.value);
+            g.append('text')
+                .attr('x', w/4)
+                .attr('y', -(h/4 + 12))
+                .attr('text-anchor', 'middle')
+                .attr('alignment-baseline', 'central')
+                .style('font-size', 14)
+                .text('(' + Math.ceil(100 * d.value/ total) + '%)');
+        }
+
     }
     render() {
         const {height, data} = this.state;
