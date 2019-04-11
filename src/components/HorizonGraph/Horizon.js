@@ -43,6 +43,7 @@ class Horizon extends Component {
         const { width, height, data} = this.state;
         
         let gd = this.matching(data),
+            that = this,
             dividerStyle = data.dividerStyle,
             tooltipStyle = data.tooltipStyle,
             dimen = {width: width - 40, height: height - 20},
@@ -52,23 +53,13 @@ class Horizon extends Component {
         
         d3.select(this.el).selectAll("*").remove();        
         let graph = d3.select(this.el);
-
+        
         const tooltip = graph.append('g');
 
         var defs = graph.append("defs");
         var filter = defs.append("filter")
             .attr("id", "drop-shadow")
-            .attr("height", "150%");
-        // filter.append("feGaussianBlur")
-        //     .attr("in", "SourceAlpha")
-        //     .attr("stdDeviation", 2.5)
-        //     .attr("result", "blur");
-        
-        // filter.append("feOffset")
-        //     .attr("in", "blur")
-        //     .attr("dx", 0)
-        //     .attr("dy", 0)
-        //     .attr("result", "offsetBlur");
+            .attr("height", "150%");        
 
         filter.append("feDropShadow")
             .attr("stdDeviation", 2.5)
@@ -128,26 +119,37 @@ class Horizon extends Component {
                 g.selectAll("*").remove();
                 return g.style('display', 'none');                
             } 
+            
+            let fontSize = 18, fontFace = "Rajdhani";
+            //pre calculate legend string width
+            let pre_text = graph.append("text")
+                .attr("x", 0)
+                .attr("y", -100)
+                .attr('font-family',fontFace)
+                .style('font-weight', 'bold')
+                .style('font-size', fontSize)
+                .text(d.label)
+                .attr('opacity', 0);                
+            
+            let text_width = pre_text.node().getComputedTextLength(), tb_m = 5, l_m = 15,               
+                m = tooltipStyle.textMargin, w = text_width + 2 * m + l_m, h = tooltipStyle.height;
 
-            const w = tooltipStyle.width, h = tooltipStyle.height, m = tooltipStyle.textMargin;
-            g.style('display', null)
-                .style('pointer-events', 'none')
-                .style('font', '10px sans-serif');
+            g.style('display', null).style('pointer-events', 'none')
             
             g.append('path')
                 .attr("d", 'M0,0l-8,-8l' + (-(w/2 - 8)) + ',0l0,' + (-h) + 'l' + w + ',0l0,' + (h) + 'l' + (-(w/2 - 8)) + ',0L0,0Z')
-                .attr('fill', data.tooltipStyle.background)                
+                .attr('fill', data.tooltipStyle.background)
                 .style("filter", "url(#drop-shadow)");
 
             g.append('path')
-                .attr("d", 'M' + (-(w/4 + 5) + m) + ',' + (-(h*3/4 + 8 - m)) + 'l10,0')
+                .attr("d", 'M' + (-w/2 + m) + ',' + (-(h * 3/4 + 8 - tb_m)) + 'l10,0')
                 .attr("stroke-width", 12)
                 .attr("stroke-linecap","round")
                 .attr("stroke", d.color);
 
             g.append('text')
-                .attr('x', w/4 - m)
-                .attr('y', -(h*3/4 + 8 - m))
+                .attr('x', l_m )
+                .attr('y', -(h*3/4 + 8 - tb_m))
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'central')
                 .attr('font-family','Rajdhani')
@@ -155,9 +157,9 @@ class Horizon extends Component {
                 .style('font-size', 18)
                 .text(d.label);
             g.append('text')
-                .attr('x', -w/4 + m)
-                .attr('y', -(h/4 + 8)- m)
-                .attr('text-anchor', 'middle')
+                .attr('dx', -5)
+                .attr('y', -(h/4 + 8)- tb_m)
+                .attr('text-anchor', 'end')
                 .attr('fill', '#041E44')
                 .attr('font-family','Rajdhani')
                 .attr('alignment-baseline', 'central')
@@ -165,17 +167,17 @@ class Horizon extends Component {
                 .style('font-size', 18)
                 .text(d.value);
             g.append('text')
-                .attr('x', w/4 - m)
-                .attr('y', -(h/4 + 8)- m)
-                .attr('text-anchor', 'middle')
+                .attr('dx', 5)
+                .attr('y', -(h/4 + 8)- tb_m)
+                .attr('text-anchor', 'start')
                 .attr('fill', '#041E44')
                 .attr('font-family','Rajdhani')
                 .attr('alignment-baseline', 'central')
                 .style('font-size', 18)
                 .text('[' + Math.ceil(100 * d.value/ total) + '%]');
-        }
-
+        }        
     }
+    
     render() {
         const {height, data} = this.state;
         let legend = d3.keys(data.value)[0];        
