@@ -58,17 +58,23 @@ class Horizon extends Component {
         var defs = graph.append("defs");
         var filter = defs.append("filter")
             .attr("id", "drop-shadow")
-            .attr("height", "125%");
-        filter.append("feGaussianBlur")
-            .attr("in", "SourceAlpha")
-            .attr("stdDeviation", 1.3)
-            .attr("result", "blur");
+            .attr("height", "150%");
+        // filter.append("feGaussianBlur")
+        //     .attr("in", "SourceAlpha")
+        //     .attr("stdDeviation", 2.5)
+        //     .attr("result", "blur");
         
-        filter.append("feOffset")
-            .attr("in", "blur")
-            .attr("dx", 2.1)
-            .attr("dy", 2.1)
-            .attr("result", "offsetBlur");
+        // filter.append("feOffset")
+        //     .attr("in", "blur")
+        //     .attr("dx", 0)
+        //     .attr("dy", 0)
+        //     .attr("result", "offsetBlur");
+
+        filter.append("feDropShadow")
+            .attr("stdDeviation", 2.5)
+            .attr("flood-color", "grey")
+            .attr("flood-opacity", 0.8);
+
         var feMerge = filter.append("feMerge");
         feMerge.append("feMergeNode")
             .attr("in", "offsetBlur")
@@ -123,45 +129,50 @@ class Horizon extends Component {
                 return g.style('display', 'none');                
             } 
 
-            const w = tooltipStyle.width, h = tooltipStyle.height;
+            const w = tooltipStyle.width, h = tooltipStyle.height, m = tooltipStyle.textMargin;
             g.style('display', null)
                 .style('pointer-events', 'none')
                 .style('font', '10px sans-serif');
             
             g.append('path')
-                .attr("d", 'M0,0l-8,-12l' + (-(w/2 - 8)) + ',0l0,' + (-h) + 'l' + w + ',0l0,' + (h) + 'l' + (-(w/2 - 8)) + ',0L0,0Z')
-                .attr('fill', data.tooltipStyle.background)
-                .attr('stroke', 'grey')
+                .attr("d", 'M0,0l-8,-8l' + (-(w/2 - 8)) + ',0l0,' + (-h) + 'l' + w + ',0l0,' + (h) + 'l' + (-(w/2 - 8)) + ',0L0,0Z')
+                .attr('fill', data.tooltipStyle.background)                
                 .style("filter", "url(#drop-shadow)");
 
             g.append('path')
-                .attr("d", 'M' + (-w/4 - 5) + ',' + (-h*3/4 - 12) + 'l10,0')
+                .attr("d", 'M' + (-(w/4 + 5) + m) + ',' + (-(h*3/4 + 8 - m)) + 'l10,0')
                 .attr("stroke-width", 12)
                 .attr("stroke-linecap","round")
                 .attr("stroke", d.color);
 
             g.append('text')
-                .attr('x', w/4)
-                .attr('y', (-h*3/4 - 12))
+                .attr('x', w/4 - m)
+                .attr('y', -(h*3/4 + 8 - m))
                 .attr('text-anchor', 'middle')
                 .attr('alignment-baseline', 'central')
-                .style('font-size', 14)
+                .attr('font-family','Rajdhani')
+                .style('font-weight', 'bold')
+                .style('font-size', 18)
                 .text(d.label);
             g.append('text')
-                .attr('x', -w/4)
-                .attr('y', -(h/4 + 12))
+                .attr('x', -w/4 + m)
+                .attr('y', -(h/4 + 8)- m)
                 .attr('text-anchor', 'middle')
+                .attr('fill', '#041E44')
+                .attr('font-family','Rajdhani')
                 .attr('alignment-baseline', 'central')
                 .style('font-weight', 'bold')
-                .style('font-size', 13)
+                .style('font-size', 18)
                 .text(d.value);
             g.append('text')
-                .attr('x', w/4)
-                .attr('y', -(h/4 + 12))
+                .attr('x', w/4 - m)
+                .attr('y', -(h/4 + 8)- m)
                 .attr('text-anchor', 'middle')
+                .attr('fill', '#041E44')
+                .attr('font-family','Rajdhani')
                 .attr('alignment-baseline', 'central')
-                .style('font-size', 14)
-                .text('(' + Math.ceil(100 * d.value/ total) + '%)');
+                .style('font-size', 18)
+                .text('[' + Math.ceil(100 * d.value/ total) + '%]');
         }
 
     }

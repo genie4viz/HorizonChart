@@ -69,10 +69,10 @@ const params = {
     "borderWidth": 1
   },
   "tooltipStyle":{
-    "width": 80,
-    "height": 40,
+    "width": 100,
+    "height": 60,
     "textMargin": 5,
-    "background": "grey"
+    "background": "white"
   },
   "legendStyle": {
     "fontSize": 20,
